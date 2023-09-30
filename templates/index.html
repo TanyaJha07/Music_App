@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Music App</title>
+
+    <style>
+        body {
+          
+            background-image: url('/static/BK.png'); /* Specify the path to your texture image */
+            background-repeat: repeat; /* You can also use 'repeat-x' or 'repeat-y' to control the direction of the texture */
+        }
+
+        /* Apply underline style to list items */
+        ul li {
+            text-decoration: none;
+            cursor: pointer;
+            color: black; /* Set the default text color */
+        
+        }
+
+        /* Add underline and change color when hovering */
+        ul li:hover {
+            text-decoration: underline;
+            color: blue; /* Set the hover text color */
+        }
+
+        /* Style for displaying the currently playing song */
+        #currentlyPlaying {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        /* Center-align the heading */
+        h1 {
+            text-align: center;
+        }
+
+        /* Center-align the entire page content */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Add some padding to the content for elegance */
+        body > * {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Namaste! Welcome to the Simple Music App</h1>
+    <div id="currentlyPlaying"></div>
+    <audio id="myAudio" controls onended="resetCurrentlyPlaying()">
+        <source id="audioSource" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <h2>Music Files</h2>
+    <ul>
+        {% for file in music_files %}
+            <li onclick="playMusic(this)">{{ file }}</li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        function playMusic(clickedItem) {
+            var audio = document.getElementById('myAudio');
+            var audioSource = document.getElementById('audioSource');
+            var currentlyPlaying = document.getElementById('currentlyPlaying');
+            
+            // Construct the correct file path based on the clicked item's text content
+            var filePath = "{{ url_for('static', filename='music/') }}" + clickedItem.textContent;
+            
+            audioSource.src = filePath;
+            audio.load();
+            audio.play();
+
+            // Update the currently playing song display
+            currentlyPlaying.innerText = "Now Playing: " + clickedItem.textContent;
+        }
+
+        function resetCurrentlyPlaying() {
+            var currentlyPlaying = document.getElementById('currentlyPlaying');
+            currentlyPlaying.innerText = "";
+        }
+    </script>
+</body>
+</html>
